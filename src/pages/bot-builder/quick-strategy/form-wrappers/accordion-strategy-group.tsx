@@ -1,7 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { useDevice } from '@deriv-com/ui';
-import Accordion from '../../../tutorials/dbot-tours/common/accordion';
 import StrategyDescription from '../descriptions/strategy-description';
 import { TDescription, TDescriptionItem } from '../types';
 
@@ -50,22 +49,7 @@ const AccordionStrategyGroup = observer(
                 {Array.isArray(grouped_objects_by_title) &&
                     (grouped_objects_by_title as TDescriptionItem[][]).map((data: TDescriptionItem[]) => {
                         const subtitle_value = data?.[0]?.content?.[0] ?? '';
-                        return (
-                            <Accordion
-                                key={`accordion-${subtitle_value}`}
-                                content_data={{
-                                    header: subtitle_value,
-                                    content: <DescriptionContent item={data} font_size={font_size} />,
-                                }}
-                                expanded={!!data[0]?.expanded}
-                                is_cursive={false}
-                                no_collapsible={data[0]?.no_collapsible}
-                                has_subtitle={!!subtitle_value}
-                                expanded_subtitles_storage={expanded_subtitles_storage}
-                                setExpandedSubtitlesStorage={setExpandedSubtitlesStorage}
-                                font_size={font_size}
-                            />
-                        );
+                        return null;
                     })}
             </>
         );

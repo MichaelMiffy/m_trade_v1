@@ -5,8 +5,6 @@ import Text from '@/components/shared_ui/text';
 import { useStore } from '@/hooks/useStore';
 import { localize } from '@deriv-com/translations';
 import { useDevice } from '@deriv-com/ui';
-import OnboardTourHandler from '../tutorials/dbot-tours/onboarding-tour';
-import Announcements from './announcements';
 import Cards from './cards';
 import InfoPanel from './info-panel';
 
@@ -29,9 +27,6 @@ const DashboardComponent = observer(({ handleTabChange }: TMobileIconGuide) => {
                 })}
             >
                 <div className='tab__dashboard__content'>
-                    {client.is_logged_in && (
-                        <Announcements is_mobile={!isDesktop} is_tablet={isTablet} handleTabChange={handleTabChange} />
-                    )}
                     <div className='quick-panel'>
                         <div
                             className={classNames('tab__dashboard__header', {
@@ -67,7 +62,7 @@ const DashboardComponent = observer(({ handleTabChange }: TMobileIconGuide) => {
                 </div>
             </div>
             <InfoPanel />
-            {active_tab === 0 && <OnboardTourHandler is_mobile={!isDesktop} />}
+            {active_tab === 0}
         </React.Fragment>
     );
 });

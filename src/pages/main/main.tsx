@@ -34,7 +34,6 @@ import {
     LabelPairedObjectsColumnCaptionRegularIcon,
     LabelPairedPuzzlePieceTwoCaptionBoldIcon,
 } from '@deriv/quill-icons/LabelPaired';
-import { LegacyGuide1pxIcon } from '@deriv/quill-icons/Legacy';
 import { Localize, localize } from '@deriv-com/translations';
 import { useDevice } from '@deriv-com/ui';
 import RunPanel from '../../components/run-panel';
@@ -44,7 +43,6 @@ import RunStrategy from '../dashboard/run-strategy';
 import './main.scss';
 
 const ChartWrapper = lazy(() => import('../chart/chart-wrapper'));
-const Tutorial = lazy(() => import('../tutorials'));
 
 const AppWrapper = observer(() => {
     const { connectionStatus } = useApiBase();
@@ -77,12 +75,12 @@ const AppWrapper = observer(() => {
     const { clear } = summary_card;
     const { DASHBOARD, BOT_BUILDER } = DBOT_TABS;
     const init_render = React.useRef(true);
-    const hash = ['dashboard', 'bot_builder', 'chart', 'tutorial'];
+    const hash = ['dashboard', 'bot_builder', 'chart', 'trading_bots', 'analysis_tool'];
     const { isDesktop } = useDevice();
     const location = useLocation();
     const navigate = useNavigate();
     const [left_tab_shadow, setLeftTabShadow] = useState<boolean>(false);
-    const [right_tab_shadow, setRightTabShadow] = useState<boolean>(false);
+    const [right_tab_shadow] = useState<boolean>(false);
 
     // Trade type modal state
     const [tradeTypeModalState, setTradeTypeModalState] = useState(getModalState());
@@ -140,7 +138,6 @@ const AppWrapper = observer(() => {
 
     React.useEffect(() => {
         const el_dashboard = document.getElementById('id-dbot-dashboard');
-        const el_tutorial = document.getElementById('id-tutorials');
 
         const observer_dashboard = new window.IntersectionObserver(
             ([entry]) => {
@@ -156,21 +153,7 @@ const AppWrapper = observer(() => {
             }
         );
 
-        const observer_tutorial = new window.IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setRightTabShadow(false);
-                    return;
-                }
-                setRightTabShadow(true);
-            },
-            {
-                root: null,
-                threshold: 0.5, // set offset 0.1 means trigger if atleast 10% of element in viewport
-            }
-        );
         observer_dashboard.observe(el_dashboard);
-        observer_tutorial.observe(el_tutorial);
     });
 
     React.useEffect(() => {
@@ -289,16 +272,9 @@ const AppWrapper = observer(() => {
 
         // Prevent scrolling when tutorial tab is active (only on mobile)
         const mainElement = document.querySelector('.main__container');
-        if (active_tab === DBOT_TABS.TUTORIAL && !isDesktop) {
-            document.body.style.overflow = 'hidden';
-            if (mainElement instanceof HTMLElement) {
-                mainElement.classList.add('no-scroll');
-            }
-        } else {
-            document.body.style.overflow = '';
-            if (mainElement instanceof HTMLElement) {
-                mainElement.classList.remove('no-scroll');
-            }
+        document.body.style.overflow = '';
+        if (mainElement instanceof HTMLElement) {
+            mainElement.classList.remove('no-scroll');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [active_tab]);
@@ -424,28 +400,39 @@ const AppWrapper = observer(() => {
                                     <ChartWrapper show_digits_stats={false} />
                                 </Suspense>
                             </div>
+
                             <div
                                 label={
                                     <>
-                                        <LegacyGuide1pxIcon
-                                            height='16px'
-                                            width='16px'
+                                        <LabelPairedObjectsColumnCaptionRegularIcon
+                                            height='24px'
+                                            width='24px'
                                             fill='var(--text-general)'
-                                            className='icon-general-fill-g-path'
                                         />
-                                        <Localize i18n_default_text='Tutorials' />
+                                        <Localize i18n_default_text='Trading Bots' />
                                     </>
                                 }
-                                id='id-tutorials'
+                                id='id-trading-bots'
                             >
-                                <div className='tutorials-wrapper'>
-                                    <Suspense
-                                        fallback={
-                                            <ChunkLoader message={localize('Please wait, loading tutorials...')} />
-                                        }
-                                    >
-                                        <Tutorial handleTabChange={handleTabChange} />
-                                    </Suspense>
+                                <div className='coming-soon'>
+                                    <Localize i18n_default_text='Coming soon' />
+                                </div>
+                            </div>
+                            <div
+                                label={
+                                    <>
+                                        <LabelPairedObjectsColumnCaptionRegularIcon
+                                            height='24px'
+                                            width='24px'
+                                            fill='var(--text-general)'
+                                        />
+                                        <Localize i18n_default_text='Analysis Tool' />
+                                    </>
+                                }
+                                id='id-analysis-tool'
+                            >
+                                <div className='coming-soon'>
+                                    <Localize i18n_default_text='Coming soon' />
                                 </div>
                             </div>
                         </Tabs>
