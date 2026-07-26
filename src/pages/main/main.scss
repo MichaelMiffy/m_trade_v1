@@ -426,6 +426,23 @@
         height: var(--tab-content-height-mobile);
     }
 }
+.analysis-tool-embed {
+    width: 100%;
+    height: calc(100vh - 120px);
+    position: relative;
+    transition: all 0.4s;
+
+    &--expanded {
+        width: calc(100vw - 39.8rem);
+    }
+
+    &__iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+    }
+}
 
 #react-joyride-step-6 {
     .onboard__label {

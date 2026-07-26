@@ -431,8 +431,17 @@ const AppWrapper = observer(() => {
                                 }
                                 id='id-analysis-tool'
                             >
-                                <div className='coming-soon'>
-                                    <Localize i18n_default_text='Coming soon' />
+                                <div
+                                    className={classNames('analysis-tool-embed', {
+                                        'analysis-tool-embed--expanded': is_drawer_open && isDesktop,
+                                    })}
+                                >
+                                    <iframe
+                                        src='https://tick-analyzer.vercel.app/'
+                                        title='Tick Analyzer'
+                                        className='analysis-tool-embed__iframe'
+                                        allow='fullscreen'
+                                    />
                                 </div>
                             </div>
                         </Tabs>
