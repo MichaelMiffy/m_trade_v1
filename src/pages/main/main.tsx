@@ -40,6 +40,8 @@ import RunPanel from '../../components/run-panel';
 import ChartModal from '../chart/chart-modal';
 import Dashboard from '../dashboard';
 import RunStrategy from '../dashboard/run-strategy';
+import { PRESET_BOTS } from '@/constants/preset-bots';
+import { loadPresetBot } from '@/utils/preset-bots-loader';
 import './main.scss';
 
 const ChartWrapper = lazy(() => import('../chart/chart-wrapper'));
@@ -402,6 +404,7 @@ const AppWrapper = observer(() => {
                             </div>
 
                             <div
+                                id='id-trading-bots'
                                 label={
                                     <>
                                         <LabelPairedObjectsColumnCaptionRegularIcon
@@ -412,12 +415,21 @@ const AppWrapper = observer(() => {
                                         <Localize i18n_default_text='Trading Bots' />
                                     </>
                                 }
-                                id='id-trading-bots'
                             >
-                                <div className='coming-soon'>
-                                    <Localize i18n_default_text='Coming soon' />
+                                <div className='trading-bots-list'>
+                                    {PRESET_BOTS.map(bot => (
+                                        <div
+                                            key={bot.id}
+                                            className='trading-bots-list__item'
+                                            onClick={() => loadPresetBot(bot, load_modal, setActiveTab)}
+                                        >
+                                            <div className='trading-bots-list__item-name'>{bot.name}</div>
+                                            <div className='trading-bots-list__item-desc'>{bot.description}</div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
+
                             <div
                                 label={
                                     <>
