@@ -61,7 +61,7 @@
         "name": "Trading Bot",
         "logo": {
             "type": "component",
-            "component_name": "BrandLogo",
+            "component_name": "M",
             "alt_text": "Trading Bot",
             "link_url": "/",
             "show_text": false,
