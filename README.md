@@ -24,15 +24,15 @@ Then walk through the full setup in [Getting Started](./user-guide/01-getting-st
 
 All the setup, configuration, and architectural context lives under [`user-guide/`](./user-guide). Start here:
 
-| #   | Guide                                                             |                                                     
-| --- | ----------------------------------------------------------------- | 
-| 01  | [Getting Started](./user-guide/01-getting-started.md)             | 
-| 02  | [Architecture Overview](./user-guide/02-architecture-overview.md) | 
+| #   | Guide                                                             |
+| --- | ----------------------------------------------------------------- |
+| 01  | [Getting Started](./user-guide/01-getting-started.md)             |
+| 02  | [Architecture Overview](./user-guide/02-architecture-overview.md) |
 | 03  | [White Labeling](./user-guide/03-white-labeling.md)               |
-| 04  | [Authentication](./user-guide/04-authentication.md)               | 
-| 05  | [WebSocket Integration](./user-guide/05-websocket-integration.md) | 
-| 06  | [Error Handling](./user-guide/06-error-handling.md)               | 
-| 07  | [Monitoring & Analytics](./user-guide/07-monitoring-analytics.md) | 
+| 04  | [Authentication](./user-guide/04-authentication.md)               |
+| 05  | [WebSocket Integration](./user-guide/05-websocket-integration.md) |
+| 06  | [Error Handling](./user-guide/06-error-handling.md)               |
+| 07  | [Monitoring & Analytics](./user-guide/07-monitoring-analytics.md) |
 | 08  | [Changelog](./user-guide/08-changelog.md)                         |
 
 Just need to re-skin? Jump straight to [White Labeling](./user-guide/03-white-labeling.md).
@@ -52,6 +52,7 @@ Just need to re-skin? Jump straight to [White Labeling](./user-guide/03-white-la
 4. Make sure your host serves `index.html` for unknown routes (SPA fallback) — OAuth redirects back to `/?code=...&state=...` and the `App` component handles the callback inline.
 
 ## Commits
+
 - Conventional commits: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`
 - Run `npm run test:lint` before pushing
 - Run `npm test` and make sure the build still passes

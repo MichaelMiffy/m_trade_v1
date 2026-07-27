@@ -426,6 +426,35 @@
         height: var(--tab-content-height-mobile);
     }
 }
+.trading-bots-list {
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    &__item {
+        padding: 1.6rem;
+        border: 1px solid var(--border-normal);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover {
+            background: var(--general-hover);
+        }
+    }
+
+    &__item-name {
+        font-weight: bold;
+        margin-bottom: 0.4rem;
+    }
+
+    &__item-desc {
+        font-size: 1.2rem;
+        color: var(--text-less-prominent);
+    }
+}
+
 .analysis-tool-embed {
     width: 100%;
     height: calc(100vh - 120px);

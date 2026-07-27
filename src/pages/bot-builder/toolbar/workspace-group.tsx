@@ -61,7 +61,7 @@ const WorkspaceGroup = observer(() => {
                         </span>
                     }
                 />
-                <ToolbarIcon
+                {/* <ToolbarIcon
                     popover_message={localize('Save')}
                     icon={
                         <span
@@ -73,7 +73,7 @@ const WorkspaceGroup = observer(() => {
                             <LabelPairedFloppyDiskMdRegularIcon />
                         </span>
                     }
-                />
+                /> */}
                 <ToolbarIcon
                     popover_message={localize('Sort blocks')}
                     icon={
