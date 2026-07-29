@@ -79,21 +79,29 @@ function App() {
     const processedCodeRef = React.useRef<string | null>(null);
 
     React.useEffect(() => {
-        if (!isProcessing && isValid && params.code && processedCodeRef.current !== params.code) {
+        if (!isProcessing && isValid && params.code) {
+            const already_processed = sessionStorage.getItem('oauth_code_processed');
+
+            if (already_processed === params.code || processedCodeRef.current === params.code) {
+                return;
+            }
+
             processedCodeRef.current = params.code;
+            sessionStorage.setItem('oauth_code_processed', params.code);
+
+            // Strip the code from the URL immediately, before the request even starts,
+            // so a reload/remount mid-flight can never see this code again.
+            cleanupURL();
+
             OAuthTokenExchangeService.exchangeCodeForToken(params.code)
                 .then(response => {
-                    if (response.access_token) {
-                        cleanupURL();
-                    } else if (response.error) {
+                    if (response.error) {
                         console.error('❌ Token exchange failed:', response.error);
                         console.error('Error description:', response.error_description);
-                        cleanupURL();
                     }
                 })
                 .catch(error => {
                     console.error('❌ Token exchange request failed:', error);
-                    cleanupURL();
                 });
         } else if (!isProcessing && error) {
             console.error('OAuth callback error:', error);
