@@ -76,9 +76,11 @@ function App() {
     useAccountSwitching();
 
     // Process the authorization code when OAuth callback is valid
+    const processedCodeRef = React.useRef<string | null>(null);
+
     React.useEffect(() => {
-        if (!isProcessing && isValid && params.code) {
-            // Exchange authorization code for access token
+        if (!isProcessing && isValid && params.code && processedCodeRef.current !== params.code) {
+            processedCodeRef.current = params.code;
             OAuthTokenExchangeService.exchangeCodeForToken(params.code)
                 .then(response => {
                     if (response.access_token) {
@@ -86,13 +88,11 @@ function App() {
                     } else if (response.error) {
                         console.error('❌ Token exchange failed:', response.error);
                         console.error('Error description:', response.error_description);
-                        // Clean up URL even on error
                         cleanupURL();
                     }
                 })
                 .catch(error => {
                     console.error('❌ Token exchange request failed:', error);
-                    // Clean up URL even on error
                     cleanupURL();
                 });
         } else if (!isProcessing && error) {
