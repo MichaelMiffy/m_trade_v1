@@ -16,6 +16,8 @@ import {
     setIsAuthorized,
 } from '../external/bot-skeleton/services/api/observables/connection-status-stream';
 import type { TAuthData } from '../types/api-types';
+import { OAuthTokenExchangeService } from '@/services/oauth-token-exchange.service';
+import { DerivWSAccountsService } from '@/services/derivws-accounts.service';
 import type RootStore from './root-store';
 
 export default class ClientStore {
@@ -129,17 +131,13 @@ export default class ClientStore {
 
     resetDemoBalance = async () => {
         if (!this.is_virtual) return;
-        if (!api_base.api) {
-            ErrorLogger.error('ResetDemoBalance', 'API not initialized');
-            return;
-        }
         try {
-            const response = (await api_base.api.send({ topup_virtual: 1 })) as {
-                error?: { message?: string; code?: string };
-            };
-            if (response?.error) {
-                ErrorLogger.error('ResetDemoBalance', response.error.message || 'Failed to reset demo balance');
+            const authInfo = OAuthTokenExchangeService.getAuthInfo();
+            if (!authInfo?.access_token) {
+                ErrorLogger.error('ResetDemoBalance', 'No access token available');
+                return;
             }
+            await DerivWSAccountsService.resetDemoBalance(authInfo.access_token, this.loginid);
         } catch (error) {
             ErrorLogger.error('ResetDemoBalance', 'Failed to reset demo balance', error);
         }
