@@ -129,8 +129,14 @@ export default class ClientStore {
 
     resetDemoBalance = async () => {
         if (!this.is_virtual) return;
+        if (!api_base.api) {
+            ErrorLogger.error('ResetDemoBalance', 'API not initialized');
+            return;
+        }
         try {
-            const response = await api_base.api.send({ topup_virtual: 1 });
+            const response = (await api_base.api.send({ topup_virtual: 1 })) as {
+                error?: { message?: string; code?: string };
+            };
             if (response?.error) {
                 ErrorLogger.error('ResetDemoBalance', response.error.message || 'Failed to reset demo balance');
             }
