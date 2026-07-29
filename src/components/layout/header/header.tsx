@@ -14,6 +14,7 @@ import { AppLogo } from '../app-logo';
 import AccountSwitcher from './account-switcher';
 import MenuItems from './menu-items';
 import MobileMenu from './mobile-menu';
+import { tryAcquireOAuthRedirectLock } from '@/utils/oauth-redirect-guard';
 import './header.scss';
 
 const AppHeader = observer(() => {
@@ -84,6 +85,7 @@ const AppHeader = observer(() => {
     }, [isAuthorizing, activeLoginid, setIsAuthorizing, authTimeout, isOAuthPending]);
 
     const handleSignup = useCallback(async () => {
+        if (!tryAcquireOAuthRedirectLock()) return;
         try {
             setIsAuthorizing(true);
             const oauthUrl = await generateOAuthURL('registration');
@@ -100,6 +102,7 @@ const AppHeader = observer(() => {
     }, [setIsAuthorizing]);
 
     const handleLogin = useCallback(async () => {
+        if(!tryAcquireOAuthRedirectLock()) return;
         try {
             // Set authorizing state immediately when login is clicked
             setIsAuthorizing(true);
