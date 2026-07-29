@@ -14,7 +14,7 @@ import { tryAcquireOAuthRedirectLock } from '@/utils/oauth-redirect-guard';
  */
 export const useInvalidTokenHandler = (): { unregisterHandler: () => void } => {
     const handleInvalidToken = async () => {
-        if(!tryAcquireOAuthRedirectLock()) return;
+        if (!tryAcquireOAuthRedirectLock()) return;
         try {
             // Clear invalid session data to prevent infinite reload loop
             sessionStorage.removeItem('auth_info');

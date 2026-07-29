@@ -374,7 +374,7 @@ export default class RunPanelStore {
     showLoginDialog = () => {
         // Only allow closing through the buttons
         this.onOkButtonClick = () => {
-            if(!tryAcquireOAuthRedirectLock) return;
+            if (!tryAcquireOAuthRedirectLock) return;
             generateOAuthURL('registration').then(url => {
                 if (url) window.location.replace(url);
             });

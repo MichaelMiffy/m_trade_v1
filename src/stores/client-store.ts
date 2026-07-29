@@ -119,12 +119,25 @@ export default class ClientStore {
             setIsLoggedIn: action,
             setIsLoggingOut: action,
             setLoginId: action,
+            resetDemoBalance: action,
 
             is_trading_experience_incomplete: computed,
             is_cr_account: computed,
             account_open_date: computed,
         });
     }
+
+    resetDemoBalance = async () => {
+        if (!this.is_virtual) return;
+        try {
+            const response = await api_base.api.send({ topup_virtual: 1 });
+            if (response?.error) {
+                ErrorLogger.error('ResetDemoBalance', response.error.message || 'Failed to reset demo balance');
+            }
+        } catch (error) {
+            ErrorLogger.error('ResetDemoBalance', 'Failed to reset demo balance', error);
+        }
+    };
 
     get active_accounts() {
         return this.accounts instanceof Object

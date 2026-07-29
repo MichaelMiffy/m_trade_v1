@@ -102,7 +102,7 @@ const AppHeader = observer(() => {
     }, [setIsAuthorizing]);
 
     const handleLogin = useCallback(async () => {
-        if(!tryAcquireOAuthRedirectLock()) return;
+        if (!tryAcquireOAuthRedirectLock()) return;
         try {
             // Set authorizing state immediately when login is clicked
             setIsAuthorizing(true);
@@ -155,6 +155,11 @@ const AppHeader = observer(() => {
                                     <AccountSwitcher activeAccount={activeAccount} />
                                 </div>
                             )}
+                            {client?.is_virtual && (
+                                <Button tertiary onClick={() => client.resetDemoBalance()}>
+                                    <Localize i18n_default_text='Reset balance' />
+                                </Button>
+                            )}
                             <Button
                                 primary
                                 disabled={client?.is_logging_out || !authData?.currency}
@@ -166,6 +171,7 @@ const AppHeader = observer(() => {
                     );
                 }
             }
+
             // Show login button only when fully settled (not during OAuth flow)
             else if (
                 position === 'right' &&
