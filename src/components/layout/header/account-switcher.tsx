@@ -177,6 +177,19 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                                 ) : (
                                     <Localize i18n_default_text='No currency assigned' />
                                 )}
+                                <span>
+                                    {account.isVirtual && (
+                                        <button
+                                            className='acc-dropdown__reset-balance'
+                                            onClick={e => {
+                                                e.stopPropagation();
+                                                client?.resetDemoBalance();
+                                            }}
+                                        >
+                                            <Localize i18n_default_text='Reset' />
+                                        </button>
+                                    )}
+                                </span>
                             </Text>
                         </div>
                     ))}
