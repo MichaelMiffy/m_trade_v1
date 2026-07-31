@@ -727,16 +727,45 @@
     top: calc(100% + 4px);
     right: 0;
     z-index: 3;
-    min-width: 16rem;
+    min-width: 18rem;
     background-color: var(--general-main-2);
     border-radius: $BORDER_RADIUS;
     box-shadow: 0 8px 16px 0 var(--shadow-menu);
     overflow: hidden;
 
+    &__overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.6rem;
+        background: rgba(0, 0, 0, 0.45);
+    }
+
+    &--modal {
+        position: relative;
+        top: auto;
+        right: auto;
+        width: min(100%, 32rem);
+        max-height: min(80vh, 48rem);
+        display: flex;
+        flex-direction: column;
+        border-radius: 1.2rem;
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.24);
+        z-index: 1;
+    }
+
+    &__list {
+        overflow-y: auto;
+        max-height: 36rem;
+    }
+
     &__account {
         display: flex;
         flex-direction: column;
-        padding: 0.8rem 1.6rem;
+        padding: 1.2rem 1.6rem;
         cursor: pointer;
         background: var(--general-main-2);
 
@@ -765,10 +794,35 @@
         }
     }
 
+    &__loginid {
+        color: var(--text-less-prominent);
+        line-height: 1.2;
+        margin-bottom: 0.2rem;
+        font-size: 1.1rem;
+    }
+
     &__balance {
         color: var(--text-prominent);
         line-height: 1.4;
         font-size: 1.2rem;
+    }
+
+    &__logout {
+        width: 100%;
+        border: none;
+        border-top: 1px solid var(--general-section-1);
+        background: transparent;
+        color: var(--text-loss-danger);
+        font-size: 1.4rem;
+        font-weight: 700;
+        line-height: 1.4;
+        padding: 1.4rem 1.6rem;
+        cursor: pointer;
+        text-align: center;
+
+        &:hover {
+            background: var(--transparent-danger);
+        }
     }
 }
 

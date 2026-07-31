@@ -5,6 +5,10 @@ import { toMoment } from '@/components/shared';
 import { FORM_ERROR_MESSAGES } from '@/components/shared/constants/form-error-messages';
 import { initFormErrorMessages } from '@/components/shared/utils/validation/declarative-validation-rules';
 import { api_base } from '@/external/bot-skeleton';
+import {
+    account_list$,
+    setAccountList,
+} from '@/external/bot-skeleton/services/api/observables/connection-status-stream';
 import { useApiBase } from '@/hooks/useApiBase';
 import { useStore } from '@/hooks/useStore';
 import { TSocketResponseData } from '@/types/api-types';
@@ -139,12 +143,27 @@ const CoreStoreProvider: React.FC<{ children: React.ReactNode }> = observer(({ c
                     if (balance.currency) {
                         client.setCurrency(balance.currency);
                     }
+
+                    // Keep account switcher list balances in sync with live balance stream
+                    const loginid = balance.loginid || activeLoginid;
+                    const current_list = account_list$.getValue();
+                    if (loginid && current_list?.length) {
+                        const updatedList = current_list.map(account =>
+                            account.loginid === loginid
+                                ? {
+                                      ...account,
+                                      balance: balance.balance,
+                                      currency: balance.currency || account.currency,
+                                  }
+                                : account
+                        );
+                        setAccountList(updatedList);
+                    }
                 }
             }
         },
         // Fixed memory leak: removed handleLogout from deps as it's not used in function body
-        // Only client is actually referenced (line 129), preventing unnecessary re-subscriptions
-        [client]
+        [client, activeLoginid]
     );
 
     useEffect(() => {
