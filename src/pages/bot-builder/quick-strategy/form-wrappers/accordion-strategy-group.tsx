@@ -1,6 +1,5 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { useDevice } from '@deriv-com/ui';
 import StrategyDescription from '../descriptions/strategy-description';
 import { TDescription, TDescriptionItem } from '../types';
 
@@ -30,30 +29,9 @@ export const DescriptionContent = ({ item, font_size }: TDescriptionContent) => 
     );
 };
 
-const AccordionStrategyGroup = observer(
-    ({
-        tutorial_selected_strategy,
-        grouped_objects_by_title,
-        expanded_subtitles_storage,
-        setExpandedSubtitlesStorage,
-    }: TAccordionStrategyGroupProps) => {
-        const { isDesktop } = useDevice();
-        const desktop_font_size = tutorial_selected_strategy ? 's' : 'xs';
-        const font_size: string = React.useMemo<string>(
-            () => (isDesktop ? desktop_font_size : 'xs'),
-            [isDesktop, desktop_font_size]
-        );
-
-        return (
-            <>
-                {Array.isArray(grouped_objects_by_title) &&
-                    (grouped_objects_by_title as TDescriptionItem[][]).map((data: TDescriptionItem[]) => {
-                        const subtitle_value = data?.[0]?.content?.[0] ?? '';
-                        return null;
-                    })}
-            </>
-        );
-    }
-);
+const AccordionStrategyGroup = observer((props: TAccordionStrategyGroupProps) => {
+    void props; // props retained for parent API compatibility while accordion UI is stubbed
+    return null;
+});
 
 export default AccordionStrategyGroup;

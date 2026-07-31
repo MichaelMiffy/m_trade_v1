@@ -12,12 +12,13 @@ type TMobileIconGuide = {
     handleTabChange: (active_number: number) => void;
 };
 
-const DashboardComponent = observer(({ handleTabChange }: TMobileIconGuide) => {
-    const { load_modal, dashboard, client } = useStore();
+const DashboardComponent = observer((props: TMobileIconGuide) => {
+    void props; // handleTabChange retained for parent API compatibility
+    const { load_modal, dashboard } = useStore();
     const { dashboard_strategies } = load_modal;
     const { active_tab, active_tour } = dashboard;
     const has_dashboard_strategies = !!dashboard_strategies?.length;
-    const { isDesktop, isTablet } = useDevice();
+    const { isDesktop } = useDevice();
 
     return (
         <React.Fragment>

@@ -5,8 +5,7 @@ import { botNotification } from '@/components/bot-notification/bot-notification'
 import { notification_message } from '@/components/bot-notification/bot-notification-utils';
 import { useStore } from '@/hooks/useStore';
 import { localize } from '@deriv-com/translations';
-import { useDevice } from '@deriv-com/ui';
-import { TBlocklyEvents } from 'Types';
+import { TBlocklyEvents } from '@/types';
 import LoadModal from '../../components/load-modal';
 import SaveModal from '../dashboard/bot-list/save-modal';
 import QuickStrategy1 from './quick-strategy';
@@ -20,7 +19,6 @@ const BotBuilder = observer(() => {
     const { is_loading } = blockly_store;
     const is_blockly_listener_registered = React.useRef(false);
     const is_blockly_delete_listener_registered = React.useRef(false);
-    const { isDesktop } = useDevice();
     const { onMount, onUnmount } = app;
     const el_ref = React.useRef<HTMLInputElement | null>(null);
 
