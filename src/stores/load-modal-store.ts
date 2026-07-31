@@ -464,10 +464,7 @@ export default class LoadModalStore {
     };
 
     loadStrategyOnBotBuilder = async () => {
-        const {
-            strategy_id = window.Blockly.utils.idGenerator.genUid(),
-            convertedDom,
-        } = window.Blockly.xmlValues;
+        const { strategy_id = window.Blockly.utils.idGenerator.genUid(), convertedDom } = window.Blockly.xmlValues;
         const derivWorkspace = window.Blockly.derivWorkspace;
 
         window.Blockly.Xml.clearWorkspaceAndLoadFromXml(convertedDom, derivWorkspace);

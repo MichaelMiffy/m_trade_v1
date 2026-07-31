@@ -124,9 +124,7 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
     const currency = displayAccount?.currency ?? activeAccount.currency;
     const balance =
         displayAccount?.balance ??
-        (client?.balance != null
-            ? formatBalance(client.balance, currency)
-            : activeAccount.balance);
+        (client?.balance != null ? formatBalance(client.balance, currency) : activeAccount.balance);
     const showChevron = !is_bot_running;
 
     const accountsPanel = (
@@ -179,6 +177,19 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                             ) : (
                                 <Localize i18n_default_text='No currency assigned' />
                             )}
+                            <span>
+                                {account.isVirtual && (
+                                    <button
+                                        className='acc-dropdown__reset-balance'
+                                        onClick={e => {
+                                            e.stopPropagation();
+                                            client?.resetDemoBalance();
+                                        }}
+                                    >
+                                        <Localize i18n_default_text='Reset' />
+                                    </button>
+                                )}
+                            </span>
                         </Text>
                     </div>
                 ))}
@@ -258,62 +269,19 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                     </div>
                 </div>
             </AccountInfoWrapper>
-            {isOpen && (
-                <div className='acc-dropdown' role='listbox'>
-                    {formattedAccounts.map(account => (
-                        <div
-                            key={account.loginid}
-                            role='option'
-                            aria-selected={account.isActive}
-                            tabIndex={0}
-                            className={classNames('acc-dropdown__account', {
-                                'acc-dropdown__account--selected': account.isActive,
-                                'acc-dropdown__account--virtual': account.isVirtual,
-                            })}
-                            onClick={() => !account.isActive && handleAccountSelect(account.loginid)}
-                            onKeyDown={e => {
-                                if (!account.isActive && (e.key === 'Enter' || e.key === ' ')) {
-                                    e.preventDefault();
-                                    handleAccountSelect(account.loginid);
-                                }
-                            }}
-                        >
-                            <Text
-                                size='xxxs'
-                                className={classNames('acc-dropdown__account-type', {
-                                    'acc-dropdown__account-type--virtual': account.isVirtual,
-                                })}
-                            >
-                                {account.isVirtual ? (
-                                    <Localize i18n_default_text='Demo account' />
-                                ) : (
-                                    <Localize i18n_default_text='Real account' />
-                                )}
-                            </Text>
-                            <Text size='xs' weight='bold' className='acc-dropdown__balance'>
-                                {account.currency ? (
-                                    `${account.balance} ${getCurrencyDisplayCode(account.currency)}`
-                                ) : (
-                                    <Localize i18n_default_text='No currency assigned' />
-                                )}
-                                <span>
-                                    {account.isVirtual && (
-                                        <button
-                                            className='acc-dropdown__reset-balance'
-                                            onClick={e => {
-                                                e.stopPropagation();
-                                                client?.resetDemoBalance();
-                                            }}
-                                        >
-                                            <Localize i18n_default_text='Reset' />
-                                        </button>
-                                    )}
-                                </span>
-                            </Text>
-                        </div>
-                    ))}
-                </div>
-            )}
+            {isOpen &&
+                (isDesktop
+                    ? accountsPanel
+                    : ReactDOM.createPortal(
+                          <div
+                              className='acc-dropdown__overlay'
+                              data-testid='dt_acc_switcher_overlay'
+                              onClick={() => setIsOpen(false)}
+                          >
+                              {accountsPanel}
+                          </div>,
+                          document.getElementById('modal_root') || document.body
+                      ))}
         </div>
     );
 });

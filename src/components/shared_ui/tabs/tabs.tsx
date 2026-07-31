@@ -136,9 +136,7 @@ const Tabs = ({
     React.useEffect(() => {
         const active_child = children[active_tab_index];
         if (active_child?.props?.keep_mounted) {
-            setMountedKeepAliveTabs(prev =>
-                prev[active_tab_index] ? prev : { ...prev, [active_tab_index]: true }
-            );
+            setMountedKeepAliveTabs(prev => (prev[active_tab_index] ? prev : { ...prev, [active_tab_index]: true }));
         }
     }, [active_tab_index, children]);
 

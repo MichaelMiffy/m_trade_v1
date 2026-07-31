@@ -44,9 +44,6 @@ import RunPanel from '../../components/run-panel';
 import ChartModal from '../chart/chart-modal';
 import Dashboard from '../dashboard';
 import RunStrategy from '../dashboard/run-strategy';
-import { PRESET_BOTS } from '@/constants/preset-bots';
-import { loadPresetBot } from '@/utils/preset-bots-loader';
-import { tryAcquireOAuthRedirectLock } from '@/utils/oauth-redirect-guard';
 import './main.scss';
 
 const ChartWrapper = lazy(() => import('../chart/chart-wrapper'));
@@ -337,7 +334,6 @@ const AppWrapper = observer(() => {
 
     // [AI]
     const handleLoginGeneration = async () => {
-        if (!tryAcquireOAuthRedirectLock()) return;
         const oauthUrl = await generateOAuthURL();
         if (oauthUrl) {
             window.location.replace(oauthUrl);
