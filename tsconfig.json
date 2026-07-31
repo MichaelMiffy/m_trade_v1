@@ -19,7 +19,13 @@
         "allowJs": true,
         "baseUrl": "./src",
         "paths": {
-            "@/*": ["./*"]
+            "@/*": ["./*"],
+            "@/Types": ["./types/index.ts"],
+            "@/Types/*": ["./types/*"],
+            "Types": ["./types/index.ts"],
+            "Types/*": ["./types/*"],
+            "Stores/*": ["./stores/*"],
+            "@deriv/stores/types": ["./types/deriv-stores.ts"]
         },
         "esModuleInterop": true,
         "types": ["jest", "@testing-library/jest-dom"]

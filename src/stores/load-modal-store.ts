@@ -12,7 +12,7 @@ import { inject_workspace_options, updateXmlValues } from '@/external/bot-skelet
 import { isDbotRTL } from '@/external/bot-skeleton/utils/workspace';
 import { TStores } from '@deriv/stores/types';
 import { localize } from '@deriv-com/translations';
-import { TStrategy } from 'Types';
+import { TStrategy } from '@/types';
 /* [AI] - Analytics event tracking removed - see migrate-docs/MONITORING_PACKAGES.md for re-implementation guide */
 /* [/AI] */
 import { tabs_title } from '../constants/load-modal';
@@ -467,7 +467,6 @@ export default class LoadModalStore {
         const {
             strategy_id = window.Blockly.utils.idGenerator.genUid(),
             convertedDom,
-            block_string,
         } = window.Blockly.xmlValues;
         const derivWorkspace = window.Blockly.derivWorkspace;
 
@@ -535,7 +534,7 @@ export default class LoadModalStore {
         /* [AI] - Analytics event tracking removed - see migrate-docs/MONITORING_PACKAGES.md for re-implementation guide */
         /* [/AI] */
 
-        const result = await load({ ...load_options, show_snackbar: false });
+        await load({ ...load_options, show_snackbar: false });
         /* [AI] - Analytics event tracking removed - see migrate-docs/MONITORING_PACKAGES.md for re-implementation guide */
         /* [/AI] */
     };

@@ -1,4 +1,4 @@
-import { PRESET_BOTS, TPresetBot } from '@/constants/preset-bots';
+import { TPresetBot } from '@/constants/preset-bots';
 
 export const loadPresetBot = async (bot: TPresetBot, load_modal: any, setActiveTab: (tab: number) => void) => {
     const response = await fetch(bot.file);

@@ -24,10 +24,11 @@ const DEFAULT_CONFIG: TRemoteConfigData = {
  * Stub hook that returns default remote config values
  * All feature flags are disabled by default
  *
- * @param _shouldLoad - Ignored parameter for compatibility
+ * @param shouldLoad - Ignored parameter for compatibility
  * @returns Object with data property containing feature flag values
  */
-const useRemoteConfig = (_shouldLoad?: boolean): { data: TRemoteConfigData } => {
+const useRemoteConfig = (shouldLoad?: boolean): { data: TRemoteConfigData } => {
+    void shouldLoad; // retained for API compatibility with callers
     return {
         data: DEFAULT_CONFIG,
     };
