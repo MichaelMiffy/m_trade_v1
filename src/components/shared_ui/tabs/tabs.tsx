@@ -9,6 +9,7 @@ declare module 'react' {
     interface HTMLAttributes<T> extends React.AriaAttributes, React.DOMAttributes<T> {
         label?: React.ReactNode;
         hash?: string;
+        keep_mounted?: boolean;
     }
 }
 
@@ -109,6 +110,13 @@ const Tabs = ({
     });
 
     const [active_tab_index, setActiveTabIndex] = React.useState(initial_index_to_show);
+    const [mounted_keep_alive_tabs, setMountedKeepAliveTabs] = React.useState<Record<number, boolean>>(() => {
+        const initial: Record<number, boolean> = {};
+        if (children[initial_index_to_show]?.props?.keep_mounted) {
+            initial[initial_index_to_show] = true;
+        }
+        return initial;
+    });
 
     React.useEffect(() => {
         if (active_tab_index >= 0 && active_index !== active_tab_index) {
@@ -124,6 +132,15 @@ const Tabs = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [active_index]);
+
+    React.useEffect(() => {
+        const active_child = children[active_tab_index];
+        if (active_child?.props?.keep_mounted) {
+            setMountedKeepAliveTabs(prev =>
+                prev[active_tab_index] ? prev : { ...prev, [active_tab_index]: true }
+            );
+        }
+    }, [active_tab_index, children]);
 
     const onClickTabItem = (index: number) => {
         if (should_update_hash) {
@@ -222,9 +239,31 @@ const Tabs = ({
             >
                 {React.Children.map(children, (child, index) => {
                     if (!child) return null;
-                    if (index !== active_tab_index) {
+                    const keep_mounted = Boolean(child.props.keep_mounted);
+                    const is_active = index === active_tab_index;
+                    const has_been_mounted = Boolean(mounted_keep_alive_tabs[index]);
+
+                    if (keep_mounted) {
+                        if (!has_been_mounted) {
+                            return undefined;
+                        }
+                        return (
+                            <div
+                                key={child.props.id ?? index}
+                                className={classNames('dc-tabs__panel', {
+                                    'dc-tabs__panel--hidden': !is_active,
+                                })}
+                                aria-hidden={!is_active}
+                            >
+                                {child.props.children}
+                            </div>
+                        );
+                    }
+
+                    if (!is_active) {
                         return undefined;
                     }
+
                     return child.props.children;
                 })}
             </div>

@@ -167,4 +167,13 @@
             width: var(--tab-width);
         }
     }
+
+    &__panel {
+        height: 100%;
+        width: 100%;
+
+        &--hidden {
+            display: none;
+        }
+    }
 }
