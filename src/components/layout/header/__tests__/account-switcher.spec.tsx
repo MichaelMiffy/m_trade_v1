@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import AccountSwitcher from '../account-switcher';
 
 const mockCheckAndRegenerateWebSocket = jest.fn();
+const mockLogout = jest.fn();
 
 const mockAccountList = [
     { loginid: 'CR123', currency: 'USD', balance: 100, is_virtual: 0 },
@@ -17,13 +18,17 @@ jest.mock('@/hooks/useApiBase', () => ({
 
 jest.mock('@/hooks/useStore', () => ({
     useStore: jest.fn(() => ({
-        client: { checkAndRegenerateWebSocket: mockCheckAndRegenerateWebSocket },
+        client: { checkAndRegenerateWebSocket: mockCheckAndRegenerateWebSocket, balance: '100', loginid: 'CR123' },
         run_panel: { is_running: false },
     })),
 }));
 
 jest.mock('@/hooks/useLogout', () => ({
-    useLogout: jest.fn(() => jest.fn()),
+    useLogout: jest.fn(() => mockLogout),
+}));
+
+jest.mock('@deriv-com/ui', () => ({
+    useDevice: jest.fn(() => ({ isDesktop: true })),
 }));
 
 jest.mock('@/external/bot-skeleton/services/api/api-base', () => ({
@@ -32,6 +37,7 @@ jest.mock('@/external/bot-skeleton/services/api/api-base', () => ({
 
 jest.mock('@deriv-com/translations', () => ({
     Localize: ({ i18n_default_text }: { i18n_default_text: string }) => <span>{i18n_default_text}</span>,
+    localize: (text: string) => text,
 }));
 
 jest.mock('@/components/shared', () => ({
@@ -69,14 +75,19 @@ const mockActiveAccount = {
 describe('AccountSwitcher', () => {
     beforeEach(() => {
         jest.clearAllMocks();
-        // Reset module mocks to defaults
         const { useApiBase } = require('@/hooks/useApiBase');
         useApiBase.mockReturnValue({ accountList: mockAccountList, activeLoginid: 'CR123' });
         const { useStore } = require('@/hooks/useStore');
         useStore.mockReturnValue({
-            client: { checkAndRegenerateWebSocket: mockCheckAndRegenerateWebSocket },
+            client: {
+                checkAndRegenerateWebSocket: mockCheckAndRegenerateWebSocket,
+                balance: '100',
+                loginid: 'CR123',
+            },
             run_panel: { is_running: false },
         });
+        const { useDevice } = require('@deriv-com/ui');
+        useDevice.mockReturnValue({ isDesktop: true });
         require('@/external/bot-skeleton/services/api/api-base').api_base.is_running = false;
     });
 
@@ -87,7 +98,7 @@ describe('AccountSwitcher', () => {
 
     it('renders active account type and balance', () => {
         render(<AccountSwitcher activeAccount={mockActiveAccount} />);
-        expect(screen.getByText('Real account')).toBeInTheDocument();
+        expect(screen.getByText('Real')).toBeInTheDocument();
         expect(screen.getByTestId('dt_balance')).toHaveTextContent('100.00 USD');
     });
 
@@ -95,6 +106,7 @@ describe('AccountSwitcher', () => {
         render(<AccountSwitcher activeAccount={mockActiveAccount} />);
         fireEvent.click(screen.getByTestId('dt_acc_info'));
         expect(screen.getByRole('listbox')).toBeInTheDocument();
+        expect(screen.getByText('Log out')).toBeInTheDocument();
     });
 
     it('does not open dropdown when bot is running via run_panel', () => {
@@ -115,7 +127,7 @@ describe('AccountSwitcher', () => {
         expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
     });
 
-    it('does not open dropdown with a single account', () => {
+    it('opens dropdown with a single account so logout is available', () => {
         const { useApiBase } = require('@/hooks/useApiBase');
         useApiBase.mockReturnValue({
             accountList: [{ loginid: 'CR123', currency: 'USD', balance: 100, is_virtual: 0 }],
@@ -123,7 +135,8 @@ describe('AccountSwitcher', () => {
         });
         render(<AccountSwitcher activeAccount={mockActiveAccount} />);
         fireEvent.click(screen.getByTestId('dt_acc_info'));
-        expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+        expect(screen.getByText('Log out')).toBeInTheDocument();
     });
 
     it('closes dropdown on outside click', () => {
@@ -186,5 +199,22 @@ describe('AccountSwitcher', () => {
         expect(trigger).toHaveAttribute('aria-haspopup', 'listbox');
         fireEvent.click(trigger);
         expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    it('renders a centered mobile modal and closes on overlay click', () => {
+        const { useDevice } = require('@deriv-com/ui');
+        useDevice.mockReturnValue({ isDesktop: false });
+        render(<AccountSwitcher activeAccount={mockActiveAccount} />);
+        fireEvent.click(screen.getByTestId('dt_acc_info'));
+        expect(screen.getByTestId('dt_acc_switcher_overlay')).toBeInTheDocument();
+        fireEvent.click(screen.getByTestId('dt_acc_switcher_overlay'));
+        expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    it('calls logout when Log out is clicked', () => {
+        render(<AccountSwitcher activeAccount={mockActiveAccount} />);
+        fireEvent.click(screen.getByTestId('dt_acc_info'));
+        fireEvent.click(screen.getByText('Log out'));
+        expect(mockLogout).toHaveBeenCalledTimes(1);
     });
 });

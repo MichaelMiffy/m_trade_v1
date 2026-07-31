@@ -30,13 +30,17 @@ const useActiveAccount = ({
         // Use centralized utility to determine if demo account
         const isVirtual = isVirtualAccount(activeAccount.loginid);
 
+        // Prefer live client balance (directBalance) over cached all-accounts snapshot
+        const resolvedBalance =
+            directBalance != null && directBalance !== ''
+                ? addComma(parseFloat(directBalance).toFixed(getDecimalPlaces(activeAccount.currency)))
+                : currentBalanceData?.balance != null
+                  ? addComma(currentBalanceData.balance.toFixed(getDecimalPlaces(currentBalanceData.currency)))
+                  : addComma(parseFloat('0').toFixed(getDecimalPlaces(activeAccount.currency)));
+
         return {
             ...activeAccount,
-            balance: currentBalanceData?.balance
-                ? addComma(currentBalanceData.balance.toFixed(getDecimalPlaces(currentBalanceData.currency)))
-                : directBalance
-                  ? addComma(parseFloat(directBalance).toFixed(getDecimalPlaces(activeAccount.currency)))
-                  : addComma(parseFloat('0').toFixed(getDecimalPlaces(activeAccount.currency))),
+            balance: resolvedBalance,
             currencyLabel: isVirtual ? 'Demo' : activeAccount?.currency,
             icon: <CurrencyIcon currency={activeAccount?.currency?.toLowerCase()} isVirtual={isVirtual} />,
             isVirtual: isVirtual,

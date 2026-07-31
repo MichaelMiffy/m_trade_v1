@@ -9,8 +9,10 @@ import Dialog from '@/components/shared_ui/dialog';
 import MobileWrapper from '@/components/shared_ui/mobile-wrapper';
 import Tabs from '@/components/shared_ui/tabs/tabs';
 import TradeTypeConfirmationModal from '@/components/trade-type-confirmation-modal';
+import TradingViewComponent from '@/components/trading-view-chart/trading-view';
 import TradingViewModal from '@/components/trading-view-chart/trading-view-modal';
 import { DBOT_TABS, TAB_IDS } from '@/constants/bot-contents';
+import { PRESET_BOTS } from '@/constants/preset-bots';
 import { api_base, updateWorkspaceName } from '@/external/bot-skeleton';
 import { CONNECTION_STATUS } from '@/external/bot-skeleton/services/api/observables/connection-status-stream';
 import { isDbotRTL } from '@/external/bot-skeleton/utils/workspace';
@@ -21,6 +23,7 @@ import {
     enableUrlParameterApplication,
     setupTradeTypeChangeListener,
 } from '@/utils/blockly-url-param-handler';
+import { loadPresetBot } from '@/utils/preset-bots-loader';
 import {
     checkAndShowTradeTypeModal,
     getModalState,
@@ -31,6 +34,7 @@ import {
 } from '@/utils/trade-type-modal-handler';
 import {
     LabelPairedChartLineCaptionRegularIcon,
+    LabelPairedChartTradingviewCaptionRegularIcon,
     LabelPairedObjectsColumnCaptionRegularIcon,
     LabelPairedPuzzlePieceTwoCaptionBoldIcon,
 } from '@deriv/quill-icons/LabelPaired';
@@ -78,7 +82,7 @@ const AppWrapper = observer(() => {
     const { clear } = summary_card;
     const { DASHBOARD, BOT_BUILDER } = DBOT_TABS;
     const init_render = React.useRef(true);
-    const hash = ['dashboard', 'bot_builder', 'chart', 'trading_bots', 'analysis_tool'];
+    const hash = ['dashboard', 'bot_builder', 'chart', 'trading_bots', 'analysis_tool', 'trading_view'];
     const { isDesktop } = useDevice();
     const location = useLocation();
     const navigate = useNavigate();
@@ -456,6 +460,29 @@ const AppWrapper = observer(() => {
                                         className='analysis-tool-embed__iframe'
                                         allow='fullscreen'
                                     />
+                                </div>
+                            </div>
+
+                            <div
+                                label={
+                                    <>
+                                        <LabelPairedChartTradingviewCaptionRegularIcon
+                                            height='24px'
+                                            width='24px'
+                                            fill='var(--text-general)'
+                                        />
+                                        <Localize i18n_default_text='TradingView' />
+                                    </>
+                                }
+                                id='id-trading-view'
+                                keep_mounted
+                            >
+                                <div
+                                    className={classNames('trading-view-embed', {
+                                        'trading-view-embed--expanded': is_drawer_open && isDesktop,
+                                    })}
+                                >
+                                    <TradingViewComponent />
                                 </div>
                             </div>
                         </Tabs>
