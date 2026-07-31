@@ -92,6 +92,10 @@ const config: Config = {
         '^@/stores/(.*)$': '<rootDir>/src/stores/$1',
         '^@/pages/(.*)$': '<rootDir>/src/pages/$1',
         '^@/services/(.*)$': '<rootDir>/src/services/$1',
+        '^@/Types(.*)$': '<rootDir>/src/types$1',
+        '^Types(.*)$': '<rootDir>/src/types$1',
+        '^Stores/(.*)$': '<rootDir>/src/stores/$1',
+        '^@deriv/stores/types$': '<rootDir>/src/types/deriv-stores.ts',
     },
 
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

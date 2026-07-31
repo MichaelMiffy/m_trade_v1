@@ -28,3 +28,15 @@ export type TBotSkeleton = {
     handleDragOver?: (event: unknown) => void;
     handleDropOver?: (event: unknown, handleFileChange: () => void) => void;
 };
+
+export type TDbot = Omit<TBotSkeleton, 'interpreter'> & {
+    interpreter: {
+        bot: {
+            getInterface: () => {
+                sellAtMarket: () => void;
+                [key: string]: unknown;
+            };
+        };
+        [key: string]: unknown;
+    };
+};

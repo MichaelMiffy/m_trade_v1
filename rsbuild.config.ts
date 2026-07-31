@@ -43,6 +43,10 @@ export default defineConfig({
             '@/utils': path.resolve(__dirname, './src/utils'),
             '@/constants': path.resolve(__dirname, './src/constants'),
             '@/stores': path.resolve(__dirname, './src/stores'),
+            '@/Types': path.resolve(__dirname, './src/types'),
+            Types: path.resolve(__dirname, './src/types'),
+            Stores: path.resolve(__dirname, './src/stores'),
+            '@deriv/stores/types': path.resolve(__dirname, './src/types/deriv-stores.ts'),
         },
     },
     output: {
