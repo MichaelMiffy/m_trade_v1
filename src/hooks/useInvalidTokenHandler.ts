@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { observer as globalObserver } from '@/external/bot-skeleton/utils/observer';
 import { ErrorLogger } from '@/utils/error-logger';
+import { tryAcquireOAuthRedirectLock } from '@/utils/oauth-redirect-guard';
 
 /**
  * Hook to handle invalid token events by clearing auth data and redirecting to OAuth login
@@ -13,6 +14,7 @@ import { ErrorLogger } from '@/utils/error-logger';
  */
 export const useInvalidTokenHandler = (): { unregisterHandler: () => void } => {
     const handleInvalidToken = async () => {
+        if (!tryAcquireOAuthRedirectLock()) return;
         try {
             // Clear invalid session data to prevent infinite reload loop
             sessionStorage.removeItem('auth_info');

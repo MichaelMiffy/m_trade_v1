@@ -840,3 +840,14 @@
         }
     }
 }
+
+.acc-dropdown__reset-balance {
+    background: none;
+    border: none;
+    color: var(--text-info-blue, #377cfc);
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+    margin-inline-start: 0.6rem;
+}

@@ -275,4 +275,25 @@ export class DerivWSAccountsService {
             throw error;
         }
     }
+
+    /**
+     * Resets a demo account's balance back to the default $10,000 USD.
+     * Only works for virtual/demo accounts — Deriv rejects this for real accounts.
+     */
+    static async resetDemoBalance(accessToken: string, accountId: string): Promise<void> {
+        const baseURL = this.getDerivWSBaseURL();
+        const OptionsDir = brandConfig.platform.derivws.directories.options;
+        const endpoint = `${baseURL}${OptionsDir}accounts/${accountId}/reset-demo-balance`;
+
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to reset demo balance: ${response.status} ${response.statusText}`);
+        }
+    }
 }

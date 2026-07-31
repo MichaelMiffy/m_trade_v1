@@ -16,6 +16,8 @@ import {
     setIsAuthorized,
 } from '../external/bot-skeleton/services/api/observables/connection-status-stream';
 import type { TAuthData } from '../types/api-types';
+import { OAuthTokenExchangeService } from '@/services/oauth-token-exchange.service';
+import { DerivWSAccountsService } from '@/services/derivws-accounts.service';
 import type RootStore from './root-store';
 
 export default class ClientStore {
@@ -119,12 +121,27 @@ export default class ClientStore {
             setIsLoggedIn: action,
             setIsLoggingOut: action,
             setLoginId: action,
+            resetDemoBalance: action,
 
             is_trading_experience_incomplete: computed,
             is_cr_account: computed,
             account_open_date: computed,
         });
     }
+
+    resetDemoBalance = async () => {
+        if (!this.is_virtual) return;
+        try {
+            const authInfo = OAuthTokenExchangeService.getAuthInfo();
+            if (!authInfo?.access_token) {
+                ErrorLogger.error('ResetDemoBalance', 'No access token available');
+                return;
+            }
+            await DerivWSAccountsService.resetDemoBalance(authInfo.access_token, this.loginid);
+        } catch (error) {
+            ErrorLogger.error('ResetDemoBalance', 'Failed to reset demo balance', error);
+        }
+    };
 
     get active_accounts() {
         return this.accounts instanceof Object

@@ -16,6 +16,7 @@ import { TStores } from '@deriv/stores/types';
 import { localize } from '@deriv-com/translations';
 import { TDbot } from 'Types';
 import RootStore from './root-store';
+import { tryAcquireOAuthRedirectLock } from '@/utils/oauth-redirect-guard';
 
 export type TContractState = {
     buy?: Buy;
@@ -373,6 +374,7 @@ export default class RunPanelStore {
     showLoginDialog = () => {
         // Only allow closing through the buttons
         this.onOkButtonClick = () => {
+            if (!tryAcquireOAuthRedirectLock) return;
             generateOAuthURL('registration').then(url => {
                 if (url) window.location.replace(url);
             });

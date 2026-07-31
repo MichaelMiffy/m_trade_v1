@@ -76,24 +76,32 @@ function App() {
     useAccountSwitching();
 
     // Process the authorization code when OAuth callback is valid
+    const processedCodeRef = React.useRef<string | null>(null);
+
     React.useEffect(() => {
         if (!isProcessing && isValid && params.code) {
-            // Exchange authorization code for access token
+            const already_processed = sessionStorage.getItem('oauth_code_processed');
+
+            if (already_processed === params.code || processedCodeRef.current === params.code) {
+                return;
+            }
+
+            processedCodeRef.current = params.code;
+            sessionStorage.setItem('oauth_code_processed', params.code);
+
+            // Strip the code from the URL immediately, before the request even starts,
+            // so a reload/remount mid-flight can never see this code again.
+            cleanupURL();
+
             OAuthTokenExchangeService.exchangeCodeForToken(params.code)
                 .then(response => {
-                    if (response.access_token) {
-                        cleanupURL();
-                    } else if (response.error) {
+                    if (response.error) {
                         console.error('❌ Token exchange failed:', response.error);
                         console.error('Error description:', response.error_description);
-                        // Clean up URL even on error
-                        cleanupURL();
                     }
                 })
                 .catch(error => {
                     console.error('❌ Token exchange request failed:', error);
-                    // Clean up URL even on error
-                    cleanupURL();
                 });
         } else if (!isProcessing && error) {
             console.error('OAuth callback error:', error);
